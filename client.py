@@ -17,7 +17,7 @@ def send_video(video_path, displayEnabled):
     # Open the video file
     vid = cv2.VideoCapture(video_path)
     while vid.isOpened():
-        time.sleep(0.1)
+        #time.sleep(0.1)
         success, frame = vid.read()
 
         if success:
