@@ -75,7 +75,7 @@ def main():
     args = parser.parse_args()
 
     # Start streaming video
-    stream_video(args.video)
+    receive_video(args.video)
 
 
 if __name__ == "__main__":
