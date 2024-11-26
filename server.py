@@ -3,6 +3,7 @@ import cv2
 import pickle
 import struct
 import argparse
+import time
 from config import SERVER_HOST, SERVER_PORT
 
 
@@ -63,6 +64,8 @@ def receive_video(displayEnabled):
                     if(displayEnabled):
                         cv2.imshow("receiving...", frame)
                         key = cv2.waitKey(10)
+                    else:
+                        print((time.time()*1000),"<Rx Frame>")
 
             finally:
                 client_socket.close()

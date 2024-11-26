@@ -34,11 +34,8 @@ def send_video(video_path, displayEnabled):
             if(displayEnabled):
                 cv2.imshow("sending...", frame)
                 key = cv2.waitKey(10)
-
-            # Close the socket
-            if key == 13:
-                client_socket.close()
-                break
+            else:
+                print((time.time()*1000),"<Tx Frame>")
 
             # Release the video capture object
             vid.release()    
