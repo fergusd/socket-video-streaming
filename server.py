@@ -2,12 +2,11 @@ import socket
 import cv2
 import pickle
 import struct
-import time
 import argparse
 from config import SERVER_HOST, SERVER_PORT
 
 
-def stream_video(video_path):
+def receive_video(displayEnabled):
     # Create a TCP/IP socket
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     socket_address = (SERVER_HOST, SERVER_PORT)
@@ -61,12 +60,10 @@ def stream_video(video_path):
                     frame = pickle.loads(frame_data)
 
                     # Display the frame
-                    cv2.imshow("receiving...", frame)
-                    key = cv2.waitKey(10)
+                    if(displayEnabled):
+                        cv2.imshow("receiving...", frame)
+                        key = cv2.waitKey(10)
 
-                    # Close the socket
-                    if key == 13:
-                        break
             finally:
                 client_socket.close()
                 cv2.destroyAllWindows()
@@ -74,7 +71,7 @@ def stream_video(video_path):
 def main():
     # Parse command line arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument("--video", required=True, type=str)
+    parser.add_argument('--display', default=False, action='store_true')
     args = parser.parse_args()
 
     # Start streaming video

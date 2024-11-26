@@ -2,10 +2,12 @@ import socket
 import cv2
 import pickle
 import struct
+import argparse
+import time
 from config import SERVER_HOST, SERVER_PORT
 
 
-def send_video():
+def send_video(video_path, displayEnabled):
     # Create a TCP/IP socket
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -29,8 +31,9 @@ def send_video():
             client_socket.sendall(message)
 
             # Display the frame being sent
-            cv2.imshow("sending...", frame)
-            key = cv2.waitKey(10)
+            if(displayEnabled):
+                cv2.imshow("sending...", frame)
+                key = cv2.waitKey(10)
 
             # Close the socket
             if key == 13:
@@ -41,7 +44,12 @@ def send_video():
             vid.release()    
 
 def main():
-    send_video()
+    # Parse command line arguments
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--video", required=True, type=str)
+    parser.add_argument('--display', default=False, action='store_true')
+    args = parser.parse_args()
+    send_video(args.video, args.display)
 
 if __name__ == "__main__":
     main()
