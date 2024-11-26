@@ -27,34 +27,49 @@ def stream_video(video_path):
         print("Connection from:", addr)
 
         if client_socket:
-            # Open the video file
-            vid = cv2.VideoCapture(video_path)
-            while vid.isOpened():
-                time.sleep(0.1)
-                success, frame = vid.read()
+            # Initialize buffer for incoming data
+            data = b""
 
-                if success:
-                    # Serialize the frame
-                    data = pickle.dumps(frame)
+            # Size of the packed frame length
+            payload_size = struct.calcsize("Q")
 
-                    # Pack the frame size and data
-                    message = struct.pack("Q", len(data)) + data
+            try:
+                while True:
+                    # Receive frame size
+                    while len(data) < payload_size:
+                        # Receive data in chunks
+                        packet = client_socket.recv(4 * 1024)
 
-                    # Send data to the client
-                    client_socket.sendall(message)
+                        # Exit if no data received
+                        if not packet:
+                            return
+                
+                        data += packet
+            
+                    # Unpack frame size
+                    packed_msg_size = data[:payload_size]
+                    data = data[payload_size:]
+                    msg_size = struct.unpack("Q", packed_msg_size)[0]
 
-                    # Display the frame being sent
-                    cv2.imshow("sending...", frame)
+                    # Receive frame data based on the unpacked frame size
+                    while len(data) < msg_size:
+                        data += client_socket.recv(4 * 1024)
+            
+                    # Deserialize frame data
+                    frame_data = data[:msg_size]
+                    data = data[msg_size:]
+                    frame = pickle.loads(frame_data)
+
+                    # Display the frame
+                    cv2.imshow("receiving...", frame)
                     key = cv2.waitKey(10)
 
                     # Close the socket
                     if key == 13:
-                        client_socket.close()
                         break
-
-            # Release the video capture object
-            vid.release()
-
+            finally:
+                client_socket.close()
+                cv2.destroyAllWindows()
 
 def main():
     # Parse command line arguments
