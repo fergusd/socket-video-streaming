@@ -35,7 +35,7 @@ def send_video(video_path, displayEnabled):
                 cv2.imshow("sending...", frame)
                 key = cv2.waitKey(10)
             else:
-                print((time.time()*1000),"<Tx Frame>")
+                print(round(time.time() * 1000),"<Tx Frame>")
 
     # Release the video capture object
     vid.release()    

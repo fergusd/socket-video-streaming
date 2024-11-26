@@ -65,7 +65,7 @@ def receive_video(displayEnabled):
                         cv2.imshow("receiving...", frame)
                         key = cv2.waitKey(10)
                     else:
-                        print((time.time()*1000),"<Rx Frame>")
+                        print(round(time.time() * 1000),"<Rx Frame>")
 
             finally:
                 client_socket.close()
