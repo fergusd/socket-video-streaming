@@ -37,8 +37,8 @@ def send_video(video_path, displayEnabled):
             else:
                 print((time.time()*1000),"<Tx Frame>")
 
-            # Release the video capture object
-            vid.release()    
+    # Release the video capture object
+    vid.release()    
 
 def main():
     # Parse command line arguments
