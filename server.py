@@ -67,7 +67,7 @@ def receive_video(displayEnabled):
                     else:
                         print(round(time.time() * 1000),"<Rx Frame>")
             
-            except socket.error:
+            finally:
                 client_socket.close()
                 if(displayEnabled):
                     cv2.destroyAllWindows()
@@ -79,7 +79,8 @@ def main():
     args = parser.parse_args()
 
     # Start streaming video
-    receive_video(args.display)
+    while True:
+        receive_video(args.display)
 
 
 if __name__ == "__main__":
