@@ -66,10 +66,11 @@ def receive_video(displayEnabled):
                         key = cv2.waitKey(10)
                     else:
                         print(round(time.time() * 1000),"<Rx Frame>")
-
-            finally:
+            
+            except socket.error:
                 client_socket.close()
-                cv2.destroyAllWindows()
+                if(displayEnabled):
+                    cv2.destroyAllWindows()
 
 def main():
     # Parse command line arguments
